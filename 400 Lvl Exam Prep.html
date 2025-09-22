@@ -141,6 +141,7 @@
       .card-back {
         background: linear-gradient(135deg, #4caf50, #45a049);
         color: white;
+        text-align: left;
         transform: rotateY(180deg);
       }
 
@@ -297,15 +298,15 @@
         },
         {
           question: "What are the three important parameters/indices of rainfall?",
-          answer: "1) Rainfall amount (must satisfy crop water requirement)\n2) Rainfall intensity (amount per unit time)\n3) Rainfall duration (length of time)",
+          answer: "1) Rainfall amount (must satisfy crop water requirement) <br> 2) Rainfall intensity (amount per unit time) <br> 3) Rainfall duration (length of time)",
         },
         {
           question: "What instruments measure wind and what do they measure?",
-          answer: "Wind vane measures wind direction\nCup anemometer measures wind speed\nClub anemometer (square-shaped) also measures wind speed",
+          answer: "Wind vane measures wind direction <br> Cup anemometer measures wind speed <br> Club anemometer (square-shaped) also measures wind speed",
         },
         {
           question: "What is the importance of wind measurements in agriculture?",
-          answer: "Wind direction predicts seasons\nWind speed affects power generation (wind turbines)\nWind speed determines the extent of erosion and how far it can transport eroded particles",
+          answer: "Wind direction predicts seasons <br> Wind speed affects power generation (wind turbines) <br> Wind speed determines the extent of erosion and how far it can transport eroded particles",
         },
         {
           question: "What does a barometer measure?",
@@ -313,15 +314,15 @@
         },
         {
           question: "What does a Campbell sundial measure?",
-          answer: "It measures:\n• Amount of energy from the sun\n• Amount of sunshine hours per day\n• Amount of solar radiation",
+          answer: "It measures: <br> • Amount of energy from the sun <br> • Amount of sunshine hours per day <br> • Amount of solar radiation",
         },
         {
           question: "What is the importance of sun to plants?",
-          answer: "The sun is important for:\n• Photosynthesis\n• Metabolism of plants",
+          answer: "The sun is important for: <br> • Photosynthesis <br> • Metabolism of plants",
         },
         {
           question: "What does a cloud recorder do?",
-          answer: "A cloud recorder:\n• Records amount of clouds that form in a day\n• Records thunder intensity\n• Measures atmospheric temperature",
+          answer: "A cloud recorder: <br> • Records amount of clouds that form in a day <br> • Records thunder intensity <br> • Measures atmospheric temperature",
         },
         {
           question: "What are the different methods of soil sampling and what do they depend on?",
@@ -673,11 +674,28 @@
         },
       ];
 
-      let currentCardIndex = 0;
+      if (!localStorage.getItem("qNumber")) {
+        localStorage.setItem("qNumber", "000");
+      } else {
+      }
+
+      // localStorage.setItem("qNumber", "5");
+
+      let currentCardIndex;
+
+      if (Number(localStorage.getItem("qNumber")) > 0) {
+        // alert(localStorage.getItem("qNumber"));
+        currentCardIndex = Number(localStorage.getItem("qNumber"));
+      } else {
+        currentCardIndex = 0;
+      }
+
+      // let currentCardIndex = 0;
+
       let isFlipped = false;
 
       function initializeFlashcards() {
-        document.getElementById("totalCards").textContent = flashcards.length;
+        document.getElementById("totalCards").innerHTML = flashcards.length;
         loadCard();
         updateProgress();
         updateNavigationButtons();
@@ -685,8 +703,8 @@
 
       function loadCard() {
         const card = flashcards[currentCardIndex];
-        document.getElementById("questionText").textContent = card.question;
-        document.getElementById("answerText").textContent = card.answer;
+        document.getElementById("questionText").innerHTML = card.question;
+        document.getElementById("answerText").innerHTML = card.answer;
 
         // Reset flip state
         isFlipped = false;
@@ -707,6 +725,8 @@
       function nextCard() {
         if (currentCardIndex < flashcards.length - 1) {
           currentCardIndex++;
+          localStorage.setItem("qNumber", `${currentCardIndex}`);
+          // alert(localStorage.getItem("qNumber"));
           loadCard();
           updateProgress();
           updateNavigationButtons();
@@ -716,6 +736,7 @@
       function previousCard() {
         if (currentCardIndex > 0) {
           currentCardIndex--;
+          localStorage.setItem("qNumber", `${currentCardIndex}`);
           loadCard();
           updateProgress();
           updateNavigationButtons();
@@ -724,8 +745,10 @@
 
       function updateProgress() {
         const progressPercentage = ((currentCardIndex + 1) / flashcards.length) * 100;
+        localStorage.setItem("qNumber", `${currentCardIndex}`);
         document.getElementById("progressFill").style.width = progressPercentage + "%";
-        document.getElementById("currentCard").textContent = currentCardIndex + 1;
+        document.getElementById("currentCard").innerHTML = currentCardIndex + 1;
+        localStorage.setItem("qNumber", `${currentCardIndex}`);
       }
 
       function updateNavigationButtons() {
