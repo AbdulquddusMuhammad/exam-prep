@@ -9,6 +9,8 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        /* user-select: none; */
+        /* outline: 1px solid red; */
       }
 
       body {
@@ -244,13 +246,54 @@
           margin-left: 0;
         }
       }
+
+      .box {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .box-child1 {
+        flex-grow: 1;
+      }
+      .box-child2 {
+        flex-grow: 1;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        padding-right: 1rem;
+      }
+
+      .box-child2 > input {
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        outline: none;
+        border: none;
+        padding-left: 1rem;
+        font-size: 1rem;
+        color: white;
+      }
+
+      .box-child2 > input::placeholder {
+        color: white;
+      }
+
+      .searchIt {
+        font-size: 1.4rem;
+      }
     </style>
   </head>
   <body>
     <div class="flashcard-container">
       <div class="header">
         <h1>🌤️ Exam Prep Flashcards</h1>
-        <div class="study-mode">Friendly Study Guide</div>
+        <div class="box">
+          <div class="study-mode box-child1">Friendly Study Guide</div>
+          <div class="study-mode box-child2">
+            <input class="searchedQues" placeholder="search a question by number" type="text" name="" id="" />
+            <div class="searchIt">🔎</div>
+          </div>
+        </div>
       </div>
 
       <div class="progress-info">
@@ -275,10 +318,14 @@
 
       <div class="flip-hint">💡 Click the card to flip it!</div>
 
-      <div class="navigation">
+      <div class="navigation" style="gap: 0">
         <button class="nav-btn" id="prevBtn" onclick="previousCard()">⬅️ Previous</button>
         <button class="shuffle-btn" onclick="shuffleCards()">🔀 Shuffle</button>
         <button class="nav-btn" id="nextBtn" onclick="nextCard()">Next ➡️</button>
+      </div>
+      <div class="navigation" style="gap: 4rem">
+        <button class="nav-btn" style="width: 100%" id="prevBtn10" onclick="previousCard10()">⬅️⬅️ Previous 10</button>
+        <button class="nav-btn" style="width: 100%" id="nextBtn10" onclick="nextCard10()">Next 10 ➡️➡️</button>
       </div>
     </div>
 
@@ -672,6 +719,50 @@
           question: "What are the conditions required for constructing an apiary?",
           answer: "It requires water, shade, abundant flowering plants, thick vegetation, and should be far from industrial areas.",
         },
+        {
+          question: "What are the main aims of Agricultural Extension?",
+          answer: "To develop graduates with practical farm skills, good interpersonal and entrepreneurial skills, communication ability, and self-employment capacity. To produce graduates relevant to themselves, the industry, and society, contributing effectively to national agricultural goals.",
+        },
+        {
+          question: "What is the objective of Agricultural Extension?",
+          answer: "To develop students’ ability to disseminate useful and practical agricultural information.",
+        },
+        {
+          question: "What is the hierarchy of Agricultural Extension 3?",
+          answer: "HOD → Lecturers → Technicians → Field Superintendent → Exam Officer → Secretary → Office Assistant → Students.",
+        },
+        {
+          question: "What is Agricultural Extension?",
+          answer: "An informal, out-of-school educational program that helps rural people and their families learn, accept, adapt, and adopt improved agricultural practices.",
+        },
+        {
+          question: "What is the importance of Agricultural Extension?",
+          answer: "It helps in changing farmers’ attitudes, makes them receptive to innovations, helps them understand themselves, and prepares them to tackle their own problems.",
+        },
+        {
+          question: "What does the acronym AR-OC stand for?",
+          answer: "Agricultural Research Outreach Centers.",
+        },
+        {
+          question: "What is the role of Agricultural Extension Officers?",
+          answer: "They act as intermediaries between research institutes and farmers, serving as facilitators, communicators, and propagators.",
+        },
+        {
+          question: "What is a demonstration in Agricultural Extension?",
+          answer: "It is an effective means of reducing farmers’ risk perception, showing them new methods or technologies, and allowing them to see and practice innovations.",
+        },
+        {
+          question: "What is result demonstration?",
+          answer: "It is a side-by-side comparison of old and new techniques, often conducted in farmers’ fields, allowing them to observe differences in outcomes.",
+        },
+        {
+          question: "What is method demonstration?",
+          answer: "Its main purpose is to teach skills by showing how to perform techniques. It does not compare old and new methods but focuses on skill acquisition.",
+        },
+        {
+          question: "What are audiovisual aids in Agricultural Extension?",
+          answer: "They are tools used to aid teaching. Projected aids include projectors and projector screens. Non-projected aids include charts, radio, flip charts, and other teaching materials.",
+        },
       ];
 
       if (!localStorage.getItem("qNumber")) {
@@ -733,9 +824,30 @@
         }
       }
 
+      function nextCard10() {
+        if (currentCardIndex < flashcards.length - 1) {
+          currentCardIndex += 10;
+          localStorage.setItem("qNumber", `${currentCardIndex}`);
+          // alert(localStorage.getItem("qNumber"));
+          loadCard();
+          updateProgress();
+          updateNavigationButtons();
+        }
+      }
+
       function previousCard() {
         if (currentCardIndex > 0) {
           currentCardIndex--;
+          localStorage.setItem("qNumber", `${currentCardIndex}`);
+          loadCard();
+          updateProgress();
+          updateNavigationButtons();
+        }
+      }
+
+      function previousCard10() {
+        if (currentCardIndex > 0) {
+          currentCardIndex -= 10;
           localStorage.setItem("qNumber", `${currentCardIndex}`);
           loadCard();
           updateProgress();
@@ -790,6 +902,25 @@
             break;
         }
       });
+
+      const searchIt = document.querySelector(".searchIt");
+      searchIt.addEventListener("click", searchQuestion);
+
+      function searchQuestion() {
+        const searchInput = document.querySelector(".searchedQues").value;
+        const questionNumber = parseInt(searchInput, 10) - 1;
+
+        if (!isNaN(questionNumber) && questionNumber >= 0 && questionNumber < flashcards.length) {
+          currentCardIndex = questionNumber;
+          localStorage.setItem("qNumber", `${currentCardIndex}`);
+
+          loadCard();
+          updateProgress();
+          updateNavigationButtons();
+        } else {
+          alert("Invalid question number. Please enter a number between 1 and " + flashcards.length);
+        }
+      }
 
       // Initialize the flashcards when the page loads
       initializeFlashcards();
